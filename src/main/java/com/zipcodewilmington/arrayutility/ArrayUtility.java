@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Created by leon on 3/6/18.
  */
@@ -26,8 +28,18 @@ public class ArrayUtility<T> {
 
     public T getMostCommonFromMerge(T[] arrayToMerge) {
 
-        Map<T,Long> result = Arrays.stream(mergeArrays(arrayToMerge)).
-                collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+//        ********************************************************************
+//        The below method utilizes the Collectors functions and automatically
+//        creates distinct keys then stores number of occurences
+//        *********************************************************************
+//          Map<T,Long> result = Arrays.stream(mergeArrays(arrayToMerge)).
+//                collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+//        *********************************************************************
+
+//        This method uses the existing method in the class. IMPORTANT to make sure
+//        the stream is made of distinct values else will cause an error for maps.
+        Map<T,Integer> result = Arrays.stream(mergeArrays(arrayToMerge)).distinct().
+                collect(toMap(Function.identity(), this::getNumberOfOccurrences));
 
         return result.entrySet().stream().
                 max(Map.Entry.comparingByValue()).
